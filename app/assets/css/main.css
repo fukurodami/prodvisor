@@ -1,0 +1,21 @@
+@import '@unocss/reset/normalize.css';
+
+:root {
+    --font-sans: 'Roboto', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html,
+body,
+#app {
+    font-family: var(--font-sans), sans-serif;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
+}

@@ -1,0 +1,22 @@
+{
+  "extends": "./.nuxt/tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"],
+      "@entities/*": ["app/entities/*"],
+      "@features/*": ["app/features/*"],
+      "@shared/*": ["app/shared/*"],
+      "@widgets/*": ["app/widgets/*"]
+    },
+    "types": ["@pinia/nuxt", "nuxt/app"],
+    "strict": true,
+    "noImplicitAny": true,
+    "skipLibCheck": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["**/*.ts", "**/*.tsx", "**/*.vue", ".nuxt/**/*.d.ts", ".nuxt/typed-router.d.ts"],
+  "exclude": ["node_modules", "dist"]
+}
