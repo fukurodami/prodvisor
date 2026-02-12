@@ -1,9 +1,29 @@
+const EnvVar = {
+  srv_api: 'https://api.beyondviolet.com',
+  srv_sso: 'https://sso.beyondviolet.com',
+}
+
 export default defineNuxtConfig({
   devtools: { enabled: true },
+
+  runtimeConfig: {
+    public: {
+      baseURL: EnvVar.srv_api,
+      baseURLSSO: EnvVar.srv_sso,
+    },
+  },
 
   modules: ['@pinia/nuxt', '@unocss/nuxt', '@nuxtjs/google-fonts'],
 
   css: ['element-plus/dist/index.css', '~/assets/css/main.css'],
+
+  components: {
+    dirs: [
+      '~/components',
+      '~/features/**/ui',
+      '~/shared/ui',
+    ],
+  },
 
   plugins: ['~/plugins/element-plus.ts'],
 
@@ -14,6 +34,12 @@ export default defineNuxtConfig({
     '@widgets': '~/app/widgets',
     '@pages': '~/app/pages',
   },
+
+  // routeRules: {
+  //   '/**': { middleware: ['auth'] },
+  //   '/login': { middleware: [] },
+  //   '/register': { middleware: [] },
+  // },
 
   typescript: {
     strict: true,

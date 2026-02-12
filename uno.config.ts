@@ -1,7 +1,9 @@
-import { defineConfig } from 'unocss'
+import { defineConfig, presetWind4 } from 'unocss'
 
 export default defineConfig({
-  presets: [],
+  presets: [
+    presetWind4(),
+  ],
 
   shortcuts: [
     ['btn', 'px-4 py-2 rounded font-medium transition-colors duration-200'],
@@ -16,9 +18,6 @@ export default defineConfig({
       warning: '#E6A23C',
       danger: '#F56C6C',
       info: '#909399',
-    },
-    fontFamily: {
-      sans: ['Roboto', 'system-ui', 'sans-serif'],
     },
   },
 })
