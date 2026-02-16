@@ -22,7 +22,7 @@ export type SendPhoneResponse =
 
 export type TelegramData = Extract<SendPhoneResponse['data'], { channel: 'telegram' }>
 
-export interface LoginResponse {
+export type LoginResponse = {
   access_token: string
   refresh_token: string
   expires_in: number

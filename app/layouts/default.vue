@@ -1,9 +1,10 @@
 <script lang="ts" setup>
+import Toast from 'primevue/toast'
 </script>
 
 <template>
   <div>
-    default
+    <Toast position="top-right" />
     <slot />
   </div>
 </template>

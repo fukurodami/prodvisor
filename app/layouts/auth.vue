@@ -13,6 +13,7 @@
 
     <div class="auth-right">
       <div class="form-container">
+        <Toast position="top-right" />
         <slot />
       </div>
     </div>
@@ -20,6 +21,8 @@
 </template>
 
 <script lang="ts" setup>
+import Toast from 'primevue/toast'
+
 defineOptions({
   name: 'AuthLayout',
 })
@@ -86,12 +89,36 @@ defineOptions({
 
 .form-container {
   width: 100%;
-  max-width: 420px;
-  background: rgba(20, 20, 35, 0.9);
-  border-radius: 16px;
+  max-width: 480px;
+  background: rgba(20, 20, 35, 0.92);
+  border-radius: 20px;
   padding: 2.5rem 2rem;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+@media (max-width: 768px) {
+  .auth-layout {
+    flex-direction: column;
+  }
+
+  .auth-left {
+    flex: none;
+    height: 40vh;
+    min-height: 300px;
+  }
+
+  .auth-right {
+    flex: 1;
+    padding: 1.5rem;
+  }
+
+  .form-container {
+    max-width: 100%;
+    border-radius: 0;
+    box-shadow: none;
+    background: rgba(20, 20, 35, 0.95);
+  }
 }
 </style>

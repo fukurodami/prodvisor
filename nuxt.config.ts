@@ -1,3 +1,6 @@
+import Aura from '@primeuix/themes/aura'
+
+
 const EnvVar = {
   srv_api: 'https://api.beyondviolet.com',
   srv_sso: 'https://sso.beyondviolet.com',
@@ -13,9 +16,16 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ['@pinia/nuxt', '@unocss/nuxt', '@nuxtjs/google-fonts'],
+  modules: [
+    '@pinia/nuxt',
+    '@unocss/nuxt',
+    '@nuxtjs/google-fonts',
+    '@primevue/nuxt-module',
+  ],
 
-  css: ['element-plus/dist/index.css', '~/assets/css/main.css'],
+  css: [
+    'primeicons/primeicons.css',
+  ],
 
   components: {
     dirs: [
@@ -25,8 +35,6 @@ export default defineNuxtConfig({
     ],
   },
 
-  plugins: ['~/plugins/element-plus.ts'],
-
   alias: {
     '@entities': '~/app/entities',
     '@features': '~/app/features',
@@ -34,12 +42,6 @@ export default defineNuxtConfig({
     '@widgets': '~/app/widgets',
     '@pages': '~/app/pages',
   },
-
-  // routeRules: {
-  //   '/**': { middleware: ['auth'] },
-  //   '/login': { middleware: [] },
-  //   '/register': { middleware: [] },
-  // },
 
   typescript: {
     strict: true,
@@ -54,6 +56,39 @@ export default defineNuxtConfig({
     prefetch: true,
     preconnect: true,
     download: true,
+  },
+
+  primevue: {
+    options: {
+      ripple: true,
+      inputVariant: 'filled',
+      theme: {
+        preset: Aura,
+        options: {
+          prefix: 'p',
+          darkModeSelector: 'system',
+          cssLayer: false,
+        },
+      },
+    },
+    components: {
+      include: [
+        'Button',
+        'InputText',
+        'InputOtp',
+        'InputNumber',
+        'Card',
+        'Dialog',
+        'Toast',
+        'Calendar',
+        'Dropdown',
+        'MultiSelect',
+        'FileUpload',
+        'DataTable',
+        'Column',
+        'Toast',
+      ],
+    },
   },
 
   compatibilityDate: '2026-02-10',

@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
+import InputText from 'primevue/inputtext'
+import FloatLabel from 'primevue/floatlabel'
 
 const props = defineProps<{
   modelValue: string
@@ -10,15 +12,13 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void
 }>()
- 
+
 const phoneRaw = ref(props.modelValue)
 
-// ← ВОТ ЭТА СТРОКА — САМАЯ ВАЖНАЯ!
 watch(phoneRaw, (newVal) => {
   emit('update:modelValue', newVal.replace(/\D/g, '').slice(0, 10))
 }, { immediate: true })
 
-// Синхронизация извне → внутрь
 watch(() => props.modelValue, (newVal) => {
   phoneRaw.value = newVal?.replace(/\D/g, '').slice(0, 10) || ''
 })
@@ -33,26 +33,21 @@ const finalError = computed(() => props.error || internalError.value)
 </script>
 
 <template>
-  <div>
-    <el-input
+  <FloatLabel>
+    <InputText
+      id="phone"
       v-model="phoneRaw"
-      :class="{ 'el-input--error': finalError }"
       :disabled="disabled"
+      :invalid="!!finalError"
+      class="w-full border border-gray-300 rounded-lg p-3 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all"
+      inputmode="numeric"
       maxlength="10"
-      placeholder="(___) ___-__-__"
+      pattern="[0-9]*"
       type="tel"
-    >
-      <template #prepend>+7</template>
-    </el-input>
+    />
+  </FloatLabel>
 
-    <div v-if="finalError" class="text-red-500 text-sm mt-1 pl-1">
-      {{ finalError }}
-    </div>
-  </div>
+  <small v-if="finalError" class="text-red-500 mt-1 block">
+    {{ finalError }}
+  </small>
 </template>
-
-<style scoped>
-.el-input--error .el-input__wrapper {
-  box-shadow: 0 0 0 1px var(--el-color-danger) inset !important;
-}
-</style>

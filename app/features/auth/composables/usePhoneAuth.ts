@@ -1,9 +1,10 @@
 import { onUnmounted, ref } from 'vue'
-import { ElMessage } from 'element-plus'
-import { sendPhone } from '@/features/auth/api/auth.api'
+import { sendCode, sendPhone } from '@/features/auth/api/auth.api'
 import type { AuthMethod, LoginResponse, SendPhonePayload, SendPhoneResponse, TelegramData } from '@entities/user/types'
+import type { AppToast } from '@/shared/composables/useToast'
 
-export function usePhoneAuth(getCaptchaToken?: () => Promise<string>) {
+export function usePhoneAuth(getCaptchaToken?: () => Promise<string>, toast?: AppToast,
+) {
   const phone = ref('')
   const code = ref('')
   const isLoading = ref(false)
@@ -25,8 +26,17 @@ export function usePhoneAuth(getCaptchaToken?: () => Promise<string>) {
 
   function startTimer(expiresAt: number) {
     stopTimer()
-    const offsetSec = 7 * 3600
-    const secondsLeft = Math.max(0, Math.ceil(expiresAt + offsetSec - Date.now() / 1000))
+
+    const nowSec = Math.floor(Date.now() / 1000)
+    const expiresSec = Math.floor(expiresAt)
+
+    let secondsLeft = Math.max(600, expiresSec - nowSec)
+
+    if (secondsLeft > 3600) {
+      secondsLeft = 600
+      console.warn('Сервер вернул аномальный expires_at, используем 10 мин')
+    }
+
     remainingTime.value = secondsLeft
 
     if (secondsLeft > 0) {
@@ -34,9 +44,11 @@ export function usePhoneAuth(getCaptchaToken?: () => Promise<string>) {
         remainingTime.value -= 1
         if (remainingTime.value <= 0) {
           stopTimer()
-          ElMessage.warning('Время на ввод кода истекло')
+          toast?.warning('Время на ввод кода истекло')
         }
       }, 1000)
+    } else {
+      toast?.warning('Время истекло')
     }
   }
 
@@ -51,7 +63,7 @@ export function usePhoneAuth(getCaptchaToken?: () => Promise<string>) {
 
   async function sendPhoneNumber(method: AuthMethod) {
     if (phone.value.length !== 10) {
-      ElMessage.warning('Введите полный номер телефона (10 цифр после +7)')
+      toast?.warning('Введите полный номер телефона (10 цифр после +7)')
       return
     }
 
@@ -77,6 +89,10 @@ export function usePhoneAuth(getCaptchaToken?: () => Promise<string>) {
 
       const response = await sendPhone(payload)
 
+      if (!response) {
+        throw new Error('Не удалось отправить запрос на авторизацию')
+      }
+
       rawResponse.value = response
 
       const { expires_at } = response.data
@@ -91,10 +107,10 @@ export function usePhoneAuth(getCaptchaToken?: () => Promise<string>) {
         successMsg.value = 'Код отправлен по звонку. Введите его ниже'
       }
 
-      ElMessage.success('Запрос выполнен')
+      toast?.success('Запрос выполнен')
     } catch (err: any) {
       errorMsg.value = err?.data?.status?.message || err?.message || 'Ошибка авторизации'
-      ElMessage.error(errorMsg.value!)
+      toast?.error(errorMsg.value!)
       console.error('Ошибка:', err)
     } finally {
       isLoading.value = false
@@ -102,8 +118,8 @@ export function usePhoneAuth(getCaptchaToken?: () => Promise<string>) {
   }
 
   async function verifyCode() {
-    if (code.value.length !== 6) {
-      ElMessage.warning('Введите 6-значный код')
+    if (code.value.length !== 4) {
+      toast?.warning('Введите 4-значный код')
       return
     }
 
@@ -113,30 +129,30 @@ export function usePhoneAuth(getCaptchaToken?: () => Promise<string>) {
     try {
       const fullPhone = `+7${phone.value}`
 
-      const payload = {
+      const response = await sendCode({
         phone: fullPhone,
         code: code.value,
         grant_type: 'phone_code',
-        app_id: 4,
-        app_secret: '251ec2c094984822be439b0b9081f02f',
+      })
+
+      function isLoginResponse(res: LoginResponse | null): res is LoginResponse {
+        return !!res && 'access_token' in res && 'refresh_token' in res && 'expires_in' in res
       }
 
-      const response = await $fetch<LoginResponse>(`${useRuntimeConfig().public.baseURLSSO}/oauth/token/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: payload,
-      })
+      if (!isLoginResponse(response)) {
+        throw new Error('Не удалось получить токены')
+      }
 
       useCookie('access_token').value = response.access_token
       useCookie('refresh_token').value = response.refresh_token
       useCookie('expires_in').value = String(Date.now() + response.expires_in * 1000)
 
       successMsg.value = 'Успешный вход!'
-      ElMessage.success('Вход выполнен')
+      toast?.success('Вход выполнен')
       navigateTo('/')
     } catch (err: any) {
-      errorMsg.value = err?.data?.status?.message || 'Неверный код'
-      ElMessage.error(errorMsg.value!)
+      errorMsg.value = err?.data?.status?.message || err?.message || 'Неверный код'
+      toast?.error(errorMsg.value!)
     } finally {
       isLoading.value = false
     }
