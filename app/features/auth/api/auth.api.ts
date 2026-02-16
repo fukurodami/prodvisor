@@ -1,5 +1,5 @@
 import { useAppFetch } from '@/shared/api/useAppFetch'
-import type { LoginResponse, SendPhonePayload, SendPhoneResponse } from '@/entities/user/types'
+import type { LoginResponse, SelfResponse, SendPhonePayload, SendPhoneResponse } from '@/entities/user/types'
 
 export async function sendPhone(payload: SendPhonePayload): Promise<SendPhoneResponse | null> {
   const config = useRuntimeConfig()
@@ -46,4 +46,13 @@ export async function refreshTokens(refreshToken: string): Promise<LoginResponse
       refresh_token: refreshToken,
     },
   }, true)
+}
+
+export async function getSelf(): Promise<SelfResponse | null> {
+  const { makeFetch } = useAppFetch()
+
+  return makeFetch(`system/users/self/`, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+  })
 }

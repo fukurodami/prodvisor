@@ -2,12 +2,20 @@
 import { useAuth } from '@/shared/composables/useAuth'
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useToast } from '@/shared/composables/useToast'
+import { useUserStore } from '@/entities/user/model/user.store'
 
 const auth = useAuth()
 const toast = useToast()
+const userStore = useUserStore()
 const expiresIn = auth.expiresIn
 
 const isRefreshing = ref(false)
+
+onMounted(async () => {
+  if (auth.isAuthenticated.value) {
+    await userStore.fetchUser()
+  }
+})
 
 const remainingSeconds = ref(0)
 
@@ -113,6 +121,25 @@ async function refreshToken() {
           <p v-if="remainingSeconds <= 0" class="text-red-400 mt-2 text-lg font-medium">
             Токен истёк
           </p>
+        </div>
+      </div>
+
+      <div class="mb-12 text-center">
+        <div v-if="userStore.isLoading" class="text-gray-400">Загрузка профиля...</div>
+        <div v-else-if="userStore.error" class="text-red-400">{{ userStore.error }}</div>
+        <div v-else-if="userStore.user" class="space-y-2">
+          <p class="text-3xl font-semibold">
+            Привет, {{ userStore.fullName }}!
+          </p>
+          <p class="text-lg text-gray-300">
+            Телефон: {{ userStore.phone }}
+          </p>
+          <p class="text-lg text-indigo-300">
+            Роль: {{ userStore.role }}
+          </p>
+        </div>
+        <div v-else class="text-gray-400">
+          Пользователь не загружен
         </div>
       </div>
 

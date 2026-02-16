@@ -1,12 +1,18 @@
 import { useAuth } from '@/shared/composables/useAuth'
 
 export function useAppFetch() {
+  const config = useRuntimeConfig()
+  const baseURL = config.public.baseURL
+
   async function makeFetch<T>(
     url: string,
     options: any = {},
     skipAuthCheck = false,
+    customBaseURL?: string,
   ): Promise<T> {
     const auth = useAuth()
+    const base = customBaseURL ?? baseURL
+    const fullUrl = url.startsWith('http') ? url : `${base}${url.startsWith('/') ? '' : '/'}${url}`
 
     if (!skipAuthCheck) {
       await auth.ensureTokenValidity()
@@ -17,7 +23,7 @@ export function useAppFetch() {
     }
 
     try {
-      const { data, error } = await useFetch<T>(url, {
+      const { data, error } = await useFetch<T>(fullUrl, {
         ...options,
         onRequest({ options }) {
           const token = auth.accessToken.value

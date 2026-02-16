@@ -1,4 +1,6 @@
 import { refreshTokens } from '@/features/auth/api/auth.api'
+import type { SelfResponse } from '@entities/user/types'
+import { useUserStore } from '@/entities/user/model/user.store'
 
 export function useAuth() {
   const accessToken = useCookie<string | null>('access_token')
@@ -30,6 +32,9 @@ export function useAuth() {
       expiresIn.value = Date.now() + (res.expires_in * 1000)
 
       state.value.isAuthenticated = true
+
+      const userStore = useUserStore()
+      await userStore.fetchUser()
     } catch (err: any) {
       logout()
       throw err
@@ -51,7 +56,21 @@ export function useAuth() {
     refreshToken.value = null
     expiresIn.value = null
     state.value.isAuthenticated = false
+
+    const userStore = useUserStore()
+    userStore.clear()
+
     navigateTo('/login')
+  }
+
+  async function self(): Promise<SelfResponse['data'] | null> {
+    const userStore = useUserStore()
+
+    if (!userStore.user) {
+      await userStore.fetchUser()
+    }
+
+    return userStore.user
   }
 
   return {
@@ -63,5 +82,6 @@ export function useAuth() {
     ensureTokenValidity,
     refresh,
     logout,
+    self,
   }
 }
