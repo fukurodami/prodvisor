@@ -5,14 +5,12 @@ import { useToast } from '@/shared/composables/useToast'
 
 const auth = useAuth()
 const toast = useToast()
-const expiresIn = auth.expiresIn // ← Ref<number | null>
+const expiresIn = auth.expiresIn
 
 const isRefreshing = ref(false)
 
-// Оставшееся время в секундах
 const remainingSeconds = ref(0)
 
-// Форматированный таймер MM:SS
 const timerDisplay = computed(() => {
   if (remainingSeconds.value <= 0) return '00:00'
 
@@ -22,14 +20,12 @@ const timerDisplay = computed(() => {
   return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`
 })
 
-// Цвет
 const timerColor = computed(() => {
   if (remainingSeconds.value <= 0) return 'text-red-500 font-bold'
   if (remainingSeconds.value <= 300) return 'text-orange-400 animate-pulse'
   return 'text-green-400'
 })
 
-// Статус
 const isAuthenticated = computed(() => auth.isAuthenticated.value)
 
 const currentLocalTime = ref('')
