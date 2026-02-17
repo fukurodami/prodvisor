@@ -1,8 +1,7 @@
 import { useAuth } from '@/shared/composables/useAuth'
 
 export function useAppFetch() {
-  const config = useRuntimeConfig()
-  const baseURL = config.public.baseURL
+
 
   async function makeFetch<T>(
     url: string,
@@ -10,9 +9,12 @@ export function useAppFetch() {
     skipAuthCheck = false,
     customBaseURL?: string,
   ): Promise<T> {
-    const auth = useAuth()
+    const config = useRuntimeConfig()
+    const baseURL = config.public.baseURL
     const base = customBaseURL ?? baseURL
     const fullUrl = url.startsWith('http') ? url : `${base}${url.startsWith('/') ? '' : '/'}${url}`
+
+    const auth = useAuth()
 
     if (!skipAuthCheck) {
       await auth.ensureTokenValidity()
@@ -41,17 +43,17 @@ export function useAppFetch() {
         },
       })
 
+      // if (error.value) {
+      //   const serverError = error.value.data?.status?.message
+      //     || error.value.data?.message
+      //     || error.value.message
+      //     || `Ошибка сервера (${error.value.status})`
+      //
+      //   throw new Error(serverError)
+      // }
+
       if (error.value) {
-        const serverError = error.value.data?.status?.message
-          || error.value.data?.message
-          || error.value.message
-          || `Ошибка сервера (${error.value.status})`
-
-        throw new Error(serverError)
-      }
-
-      if (!data.value) {
-        throw new Error('Сервер не вернул данные')
+        console.warn('[useAppFetch] Ошибка ответа:', error.value.status, error.value.data)
       }
 
       return data.value as T

@@ -3,9 +3,28 @@ import type { SelfResponse } from '@entities/user/types'
 import { useUserStore } from '@/entities/user/model/user.store'
 
 export function useAuth() {
-  const accessToken = useCookie<string | null>('access_token')
-  const refreshToken = useCookie<string | null>('refresh_token')
-  const expiresIn = useCookie<number | null>('expires_in')
+  const accessToken = useCookie<string | null>('access_token', {
+    maxAge: 60 * 60 * 24 * 7,
+    sameSite: 'strict',
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: false,
+  })
+
+  const refreshToken = useCookie<string | null>('refresh_token', {
+    maxAge: 60 * 60 * 24 * 30, // 30 дней
+    sameSite: 'strict',
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: false,
+  })
+
+  const expiresIn = useCookie<number | null>('expires_in', {
+    maxAge: 60 * 60 * 24 * 30,
+    sameSite: 'strict',
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: false,
+  })
+
+  const userStore = useUserStore()
 
   const state = ref({
     isAuthenticated: !!accessToken.value,
@@ -17,23 +36,32 @@ export function useAuth() {
   })
 
   async function refresh(): Promise<void> {
+    console.log('refresh called')
+
     if (!refreshToken.value) {
       logout()
+      return
+    }
+
+    if (expiresIn.value && Date.now() < expiresIn.value - 5 * 60 * 1000) {
+      console.log('Токен ещё живой, рефреш не нужен')
       return
     }
 
     try {
       const res = await refreshTokens(refreshToken.value)
 
+      if (!res || !res.access_token || !res.refresh_token) {
+        logout()
+        return
+      }
+
       accessToken.value = res.access_token
       refreshToken.value = res.refresh_token
-
-      // Самое важное: сохраняем момент истечения
       expiresIn.value = Date.now() + (res.expires_in * 1000)
 
       state.value.isAuthenticated = true
 
-      const userStore = useUserStore()
       await userStore.fetchUser()
     } catch (err: any) {
       logout()
@@ -42,7 +70,13 @@ export function useAuth() {
   }
 
   async function ensureTokenValidity(): Promise<void> {
-    if (!accessToken.value || isTokenExpired.value) {
+    if (!accessToken.value) {
+      console.log('Нет access_token → logout')
+      logout()
+      return
+    }
+
+    if (isTokenExpired.value) {
       if (refreshToken.value) {
         await refresh()
       } else {
@@ -52,20 +86,18 @@ export function useAuth() {
   }
 
   function logout(): void {
+    console.log('logout')
     accessToken.value = null
     refreshToken.value = null
     expiresIn.value = null
     state.value.isAuthenticated = false
 
-    const userStore = useUserStore()
     userStore.clear()
 
     navigateTo('/login')
   }
 
   async function self(): Promise<SelfResponse['data'] | null> {
-    const userStore = useUserStore()
-
     if (!userStore.user) {
       await userStore.fetchUser()
     }

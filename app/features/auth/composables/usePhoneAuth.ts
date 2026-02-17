@@ -143,9 +143,26 @@ export function usePhoneAuth(getCaptchaToken?: () => Promise<string>, toast?: Ap
         throw new Error('Не удалось получить токены')
       }
 
-      useCookie('access_token').value = response.access_token
-      useCookie('refresh_token').value = response.refresh_token
-      useCookie('expires_in').value = String(Date.now() + response.expires_in * 1000)
+      useCookie('access_token', {
+        maxAge: 60 * 60 * 24 * 7,
+        sameSite: 'strict',
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: false,
+      }).value = response.access_token
+
+      useCookie('refresh_token', {
+        maxAge: 60 * 60 * 24 * 30,
+        sameSite: 'strict',
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: false,
+      }).value = response.refresh_token
+
+      useCookie('expires_in', {
+        maxAge: 60 * 60 * 24 * 30,
+        sameSite: 'strict',
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: false,
+      }).value = String(Date.now() + response.expires_in * 1000)
 
       successMsg.value = 'Успешный вход!'
       toast?.success('Вход выполнен')

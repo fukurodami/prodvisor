@@ -1,16 +1,16 @@
 import { defineNuxtRouteMiddleware } from 'nuxt/app'
 import type { RouteLocationNormalizedLoaded } from 'vue-router'
+import { useAuth } from '@/shared/composables/useAuth'
 
 export default defineNuxtRouteMiddleware(async (to: RouteLocationNormalizedLoaded) => {
-  const publicPages = ['/login', '/register']
-  if (publicPages.includes(to.path)) {
-    return
-  }
+  if (process.server) return
 
-  const token = useCookie('access_token')
+  if (['/login', '/register'].includes(to.path)) return
 
-  // Если после проверки токена нет — на логин
-  if (!token.value && to.name !== 'login') {
+  const auth = useAuth()
+  await auth.ensureTokenValidity()
+  
+  if (!auth.isAuthenticated.value) {
     const redirect = encodeURIComponent(to.fullPath)
     return navigateTo(`/login?redirect=${redirect}`, { redirectCode: 302 })
   }
