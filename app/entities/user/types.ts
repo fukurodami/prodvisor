@@ -1,4 +1,4 @@
-import type { BaseResponse } from '@/entities/base'
+import type { BaseResponse, ImageType } from '@/entities/base'
 
 
 // --- Авторизация ---
@@ -36,6 +36,7 @@ export type LoginResponse = {
 export interface SelfPersonal {
   first_name: string
   last_name: string
+  img: ImageType
   // middle_name?: string | null
 }
 

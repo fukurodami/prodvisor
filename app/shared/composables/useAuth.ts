@@ -1,5 +1,5 @@
 import { refreshTokens } from '@/features/auth/api/auth.api'
-import type { SelfResponse } from '@entities/user/types'
+import type { SelfResponse } from '@/entities/user/types'
 import { useUserStore } from '@/entities/user/model/user.store'
 
 export function useAuth() {
@@ -11,7 +11,7 @@ export function useAuth() {
   })
 
   const refreshToken = useCookie<string | null>('refresh_token', {
-    maxAge: 60 * 60 * 24 * 30, // 30 дней
+    maxAge: 60 * 60 * 24 * 30,
     sameSite: 'strict',
     secure: process.env.NODE_ENV === 'production',
     httpOnly: false,
@@ -58,7 +58,7 @@ export function useAuth() {
 
       accessToken.value = res.access_token
       refreshToken.value = res.refresh_token
-      expiresIn.value = Date.now() + (res.expires_in * 1000)
+      expiresIn.value = Date.now() + res.expires_in * 1000
 
       state.value.isAuthenticated = true
 

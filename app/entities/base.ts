@@ -5,3 +5,9 @@ export interface BaseResponse<T = unknown> {
   }
   data: T
 }
+
+type ImgSrc = {
+  path: string
+}
+
+export type ImageType = string | ImgSrc

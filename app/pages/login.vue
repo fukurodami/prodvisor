@@ -4,7 +4,7 @@ import OtpInput from '@/shared/ui/OtpInput.vue'
 import VueHcaptcha from '@hcaptcha/vue3-hcaptcha'
 import { usePhoneAuth } from '@/features/auth/composables/usePhoneAuth'
 import Button from 'primevue/button'
-import type { AuthMethod } from '@entities/user/types'
+import type { AuthMethod } from '@/entities/user/types'
 import { useToast } from '@/shared/composables/useToast'
 
 definePageMeta({ layout: 'auth' })

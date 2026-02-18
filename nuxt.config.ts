@@ -24,6 +24,7 @@ export default defineNuxtConfig({
   ],
 
   css: [
+    '~/assets/css/main.css',
     'primeicons/primeicons.css',
   ],
 
@@ -36,26 +37,17 @@ export default defineNuxtConfig({
   },
 
   alias: {
-    '@entities': '~/app/entities',
-    '@features': '~/app/features',
-    '@shared': '~/app/shared',
-    '@widgets': '~/app/widgets',
-    '@pages': '~/app/pages',
+    '@/entities': '~/app/entities',
+    '@/features': '~/app/features',
+    '@/shared': '~/app/shared',
+    '@/widgets': '~/app/widgets',
+    '@/pages': '~/app/pages',
+    '@/assets': '~/app/assets',
   },
 
   typescript: {
     strict: true,
     typeCheck: true,
-  },
-
-  googleFonts: {
-    families: {
-      Roboto: [300, 400, 500, 700],
-    },
-    display: 'swap',
-    prefetch: true,
-    preconnect: true,
-    download: true,
   },
 
   primevue: {
@@ -66,7 +58,7 @@ export default defineNuxtConfig({
         preset: Aura,
         options: {
           prefix: 'p',
-          darkModeSelector: 'system',
+          darkModeSelector: 'light',
           cssLayer: false,
         },
       },
@@ -87,6 +79,7 @@ export default defineNuxtConfig({
         'DataTable',
         'Column',
         'Toast',
+        'Menubar',
       ],
     },
   },

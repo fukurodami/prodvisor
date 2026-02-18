@@ -1,10 +1,15 @@
 import { onUnmounted, ref } from 'vue'
 import { sendCode, sendPhone } from '@/features/auth/api/auth.api'
-import type { AuthMethod, LoginResponse, SendPhonePayload, SendPhoneResponse, TelegramData } from '@entities/user/types'
+import type {
+  AuthMethod,
+  LoginResponse,
+  SendPhonePayload,
+  SendPhoneResponse,
+  TelegramData,
+} from '@/entities/user/types'
 import type { AppToast } from '@/shared/composables/useToast'
 
-export function usePhoneAuth(getCaptchaToken?: () => Promise<string>, toast?: AppToast,
-) {
+export function usePhoneAuth(getCaptchaToken?: () => Promise<string>, toast?: AppToast) {
   const phone = ref('')
   const code = ref('')
   const isLoading = ref(false)

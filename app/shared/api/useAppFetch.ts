@@ -29,7 +29,7 @@ export function useAppFetch() {
         ...options,
         onRequest({ options }) {
           const token = auth.accessToken.value
-          if (token) {
+          if (token && !skipAuthCheck) {
             (options.headers as Record<string, string> | any) = {
               ...(options.headers ?? {}),
               Authorization: `Bearer ${token}`,

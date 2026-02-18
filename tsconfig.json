@@ -13,17 +13,20 @@
         "./*"
       ],
       // ← добавь эти две строки
-      "@entities/*": [
+      "@/entities/*": [
         "app/entities/*"
       ],
-      "@features/*": [
+      "@/features/*": [
         "app/features/*"
       ],
-      "@shared/*": [
+      "@/shared/*": [
         "app/shared/*"
       ],
-      "@widgets/*": [
+      "@/widgets/*": [
         "app/widgets/*"
+      ],
+      "@/assets/*": [
+        "app/assets/*"
       ]
     },
     "types": [
@@ -41,6 +44,7 @@
     "**/*.ts",
     "**/*.tsx",
     "**/*.vue",
+    "**/*.d.ts",
     ".nuxt/**/*.d.ts",
     ".nuxt/typed-router.d.ts"
   ],

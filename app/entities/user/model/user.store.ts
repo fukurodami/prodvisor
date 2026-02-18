@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { getSelf } from '@/features/auth/api/auth.api'
 import type { SelfResponse } from '@/entities/user/types'
+import emptyAvatar from '@/assets/images/empty-avatar.png'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -12,11 +13,15 @@ export const useUserStore = defineStore('user', {
   getters: {
     fullName: (state) => {
       if (!state.user?.personal) return '—'
-      return `${state.user.personal.first_name || ''} ${state.user.personal.last_name || ''}`.trim() || '—'
+      return (
+        `${state.user.personal.first_name || ''} ${state.user.personal.last_name || ''}`.trim() ||
+        '—'
+      )
     },
     phone: (state) => state.user?.contact.phone || '—',
     role: (state) => state.user?.scope.role || '—',
     uuid: (state) => state.user?.uuid || '—',
+    image: (state) => state.user?.personal.img || emptyAvatar,
   },
 
   actions: {
