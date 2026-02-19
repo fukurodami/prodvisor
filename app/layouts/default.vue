@@ -8,9 +8,9 @@ import SelfPopover from '@/features/auth/ui/SelfPopover.vue'
       <template #start>
         <span class="layout-topbar__logo">PRODVISOR</span>
         <nav aria-label="Secondary" class="layout-nav">
-          <NuxtLink class="layout-nav__link" to="/">Главная</NuxtLink>
+          <NuxtLink class="layout-nav__link" to="/categories">Категории</NuxtLink>
           <span aria-hidden="true" class="layout-nav__divider"></span>
-          <NuxtLink class="layout-nav__link" to="/analytics">Аналитика</NuxtLink>
+          <NuxtLink class="layout-nav__link" to="/elasticity">Эластичность</NuxtLink>
         </nav>
       </template>
       <template #end>
@@ -18,6 +18,7 @@ import SelfPopover from '@/features/auth/ui/SelfPopover.vue'
       </template>
     </Menubar>
     <div class="layout-content">
+      <div id="header-page" class="font-700 text-2xl"></div>
       <slot />
     </div>
     <Toast position="top-right" />
@@ -76,11 +77,11 @@ import SelfPopover from '@/features/auth/ui/SelfPopover.vue'
     left: 50%;
     position: absolute;
     transform: translateX(-50%);
+    font-weight: 700;
   }
 
   :deep(.layout-nav__link) {
-    color: inherit;
-    font-weight: 500;
+    font-weight: 600;
     text-decoration: none;
     padding: 0.25rem 0.5rem;
     border-radius: 0.5rem;
@@ -108,6 +109,6 @@ import SelfPopover from '@/features/auth/ui/SelfPopover.vue'
 
 .layout-content {
   min-height: calc(100vh - 4rem);
-  padding-top: 4rem;
+  padding: calc(4rem + 20px) 60px 0;
 }
 </style>

@@ -171,7 +171,7 @@ export function usePhoneAuth(getCaptchaToken?: () => Promise<string>, toast?: Ap
 
       successMsg.value = 'Успешный вход!'
       toast?.success('Вход выполнен')
-      navigateTo('/')
+      navigateTo('/categories')
     } catch (err: any) {
       errorMsg.value = err?.data?.status?.message || err?.message || 'Неверный код'
       toast?.error(errorMsg.value!)

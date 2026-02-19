@@ -6,11 +6,11 @@ body,
     height: 100%;
     margin: 0;
     padding: 0;
+    color: theme('colors.text');
+    font-weight: 400;
+    font-family: 'Cantarell', system-ui, sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6, p {
     margin: 0;
 }
-
-
-

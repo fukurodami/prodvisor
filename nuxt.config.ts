@@ -1,6 +1,5 @@
 import Aura from '@primeuix/themes/aura'
 
-
 const EnvVar = {
   srv_api: 'https://api.beyondviolet.com',
   srv_sso: 'https://sso.beyondviolet.com',
@@ -16,24 +15,19 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: [
-    '@pinia/nuxt',
-    '@unocss/nuxt',
-    '@nuxtjs/google-fonts',
-    '@primevue/nuxt-module',
-  ],
+  modules: ['@pinia/nuxt', '@unocss/nuxt', '@nuxtjs/google-fonts', '@primevue/nuxt-module'],
+  googleFonts: {
+    families: {
+      Cantarell: [300, 400, 500, 700],
+    },
+    display: 'swap',
+    preconnect: true,
+  },
 
-  css: [
-    '~/assets/css/main.css',
-    'primeicons/primeicons.css',
-  ],
+  css: ['~/assets/css/main.css', 'primeicons/primeicons.css'],
 
   components: {
-    dirs: [
-      '~/components',
-      '~/features/**/ui',
-      '~/shared/ui',
-    ],
+    dirs: ['~/components', '~/features/**/ui', '~/shared/ui'],
   },
 
   alias: {

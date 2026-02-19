@@ -48,6 +48,7 @@ export default defineConfig({
 
   theme: {
     colors: {
+      text: '#303033',
       primary: '#409EFF',
       success: '#67C23A',
       warning: '#E6A23C',
