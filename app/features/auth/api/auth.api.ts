@@ -1,16 +1,26 @@
 import { useAppFetch } from '@/shared/api/useAppFetch'
-import type { LoginResponse, SelfResponse, SendPhonePayload, SendPhoneResponse } from '@/entities/user/types'
+import type {
+  LoginResponse,
+  SelfResponse,
+  SendPhonePayload,
+  SendPhoneResponse,
+} from '@/entities/user/types'
+import { useAuth } from '@/shared/composables/useAuth'
 
 export async function sendPhone(payload: SendPhonePayload): Promise<SendPhoneResponse | null> {
   const config = useRuntimeConfig()
   const SSO_BASE = config.public.baseURLSSO
 
   const { makeFetch } = useAppFetch()
-  return makeFetch<SendPhoneResponse>(`${SSO_BASE}/oauth/authorize/`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: payload,
-  }, true)
+  return makeFetch<SendPhoneResponse>(
+    `${SSO_BASE}/oauth/authorize/`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: payload,
+    },
+    true
+  )
 }
 
 export async function sendCode(payload: {
@@ -22,15 +32,19 @@ export async function sendCode(payload: {
   const SSO_BASE = config.public.baseURLSSO
 
   const { makeFetch } = useAppFetch()
-  return makeFetch<LoginResponse>(`${SSO_BASE}/oauth/token/`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: {
-      ...payload,
-      app_id: 4,
-      app_secret: '251ec2c094984822be439b0b9081f02f',
+  return makeFetch<LoginResponse>(
+    `${SSO_BASE}/oauth/token/`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: {
+        ...payload,
+        app_id: 4,
+        app_secret: '251ec2c094984822be439b0b9081f02f',
+      },
     },
-  }, true)
+    true
+  )
 }
 
 export async function refreshTokens(refreshToken: string): Promise<LoginResponse> {
@@ -38,21 +52,28 @@ export async function refreshTokens(refreshToken: string): Promise<LoginResponse
   const SSO_BASE = config.public.baseURLSSO
 
   const { makeFetch } = useAppFetch()
-  return makeFetch<LoginResponse>(`${SSO_BASE}/oauth/token/`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: {
-      grant_type: 'refresh_token',
-      refresh_token: refreshToken,
+  return makeFetch<LoginResponse>(
+    `${SSO_BASE}/oauth/token/`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: {
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken,
+      },
     },
-  }, true)
+    true
+  )
 }
 
 export async function getSelf(): Promise<SelfResponse | null> {
   const { makeFetch } = useAppFetch()
+  const auth = useAuth()
+  const token = auth.accessToken.value
 
   return makeFetch(`system/users/self/`, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
+    key: `self:${token ?? 'guest'}`,
   })
 }

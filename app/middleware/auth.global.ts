@@ -17,11 +17,11 @@ export default defineNuxtRouteMiddleware(async (to: RouteLocationNormalizedLoade
     return navigateTo(`/login?redirect=${redirect}`, { redirectCode: 302 })
   }
 
-  if (!userStore.user && !userStore.isLoading) {
+  if (!userStore.user && !userStore.isLoading && auth.isAuthenticated.value) {
     try {
       await userStore.fetchUser()
     } catch {
-      auth.logout()
+      await auth.logout()
     }
   }
 })

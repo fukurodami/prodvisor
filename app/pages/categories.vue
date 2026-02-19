@@ -2,7 +2,7 @@
 
 <template>
   <div>
-    <Teleport to="#header-page">Категории</Teleport>
+    <Teleport defer to="#header-page">Категории</Teleport>
   </div>
 </template>
 

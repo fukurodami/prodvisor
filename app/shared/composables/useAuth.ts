@@ -85,16 +85,16 @@ export function useAuth() {
     }
   }
 
-  function logout(): void {
-    console.log('logout')
+  async function logout(): Promise<void> {
+    clearNuxtData(`self:${accessToken.value ?? 'guest'}`)
+
     accessToken.value = null
     refreshToken.value = null
     expiresIn.value = null
     state.value.isAuthenticated = false
 
     userStore.clear()
-
-    navigateTo('/login')
+    await navigateTo('/login', { replace: true })
   }
 
   async function self(): Promise<SelfResponse['data'] | null> {

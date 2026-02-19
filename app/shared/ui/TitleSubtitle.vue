@@ -57,21 +57,23 @@ const imgSrc = computed<string | null>(() => {
 
 <template>
   <div class="flex items-center gap-2">
-    <img
-      v-if="imgSrc && !imgError"
-      :class="borderColor"
-      :src="imgSrc"
-      :style="{
-        height: size + 'px',
-        width: size + 'px',
-        borderRadius: '50%',
-        borderWidth: borderWidth + 'px',
-        borderStyle: 'solid',
-      }"
-      alt="ava"
-      class="avatar flex"
-      @error="onImageError"
-    />
+    <ClientOnly>
+      <img
+        v-if="imgSrc && !imgError"
+        :class="borderColor"
+        :src="imgSrc"
+        :style="{
+          height: size + 'px',
+          width: size + 'px',
+          borderRadius: '50%',
+          borderWidth: borderWidth + 'px',
+          borderStyle: 'solid',
+        }"
+        alt="ava"
+        class="avatar flex"
+        @error="onImageError"
+      />
+    </ClientOnly>
     <div v-if="title" class="flex flex-col items-start">
       <span>{{ title }}</span>
       <span>{{ subTitle }}</span>
@@ -79,4 +81,8 @@ const imgSrc = computed<string | null>(() => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.avatar {
+  object-fit: contain;
+}
+</style>

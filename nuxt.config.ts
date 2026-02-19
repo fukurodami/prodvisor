@@ -3,6 +3,7 @@ import Aura from '@primeuix/themes/aura'
 const EnvVar = {
   srv_api: 'https://api.beyondviolet.com',
   srv_sso: 'https://sso.beyondviolet.com',
+  srv_static: 'https://static.beyondviolet.com',
 }
 
 export default defineNuxtConfig({
@@ -12,6 +13,7 @@ export default defineNuxtConfig({
     public: {
       baseURL: EnvVar.srv_api,
       baseURLSSO: EnvVar.srv_sso,
+      baseURLStatic: EnvVar.srv_static,
     },
   },
 

@@ -1,13 +1,11 @@
 import { useAuth } from '@/shared/composables/useAuth'
 
 export function useAppFetch() {
-
-
   async function makeFetch<T>(
     url: string,
     options: any = {},
     skipAuthCheck = false,
-    customBaseURL?: string,
+    customBaseURL?: string
   ): Promise<T> {
     const config = useRuntimeConfig()
     const baseURL = config.public.baseURL
@@ -15,6 +13,7 @@ export function useAppFetch() {
     const fullUrl = url.startsWith('http') ? url : `${base}${url.startsWith('/') ? '' : '/'}${url}`
 
     const auth = useAuth()
+    const token = auth.accessToken.value
 
     if (!skipAuthCheck) {
       await auth.ensureTokenValidity()
@@ -27,14 +26,9 @@ export function useAppFetch() {
     try {
       const { data, error } = await useFetch<T>(fullUrl, {
         ...options,
-        onRequest({ options }) {
-          const token = auth.accessToken.value
-          if (token && !skipAuthCheck) {
-            (options.headers as Record<string, string> | any) = {
-              ...(options.headers ?? {}),
-              Authorization: `Bearer ${token}`,
-            }
-          }
+        headers: {
+          ...(options.headers ?? {}),
+          ...(token && !skipAuthCheck ? { Authorization: `Bearer ${token}` } : {}),
         },
         onResponseError({ response }) {
           if (response.status === 401) {
