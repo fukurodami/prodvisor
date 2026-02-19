@@ -39,7 +39,7 @@ export function useAuth() {
     console.log('refresh called')
 
     if (!refreshToken.value) {
-      logout()
+      await logout()
       return
     }
 
@@ -52,7 +52,7 @@ export function useAuth() {
       const res = await refreshTokens(refreshToken.value)
 
       if (!res || !res.access_token || !res.refresh_token) {
-        logout()
+        await logout()
         return
       }
 
@@ -64,7 +64,7 @@ export function useAuth() {
 
       await userStore.fetchUser()
     } catch (err: any) {
-      logout()
+      await logout()
       throw err
     }
   }
@@ -72,7 +72,7 @@ export function useAuth() {
   async function ensureTokenValidity(): Promise<void> {
     if (!accessToken.value) {
       console.log('Нет access_token → logout')
-      logout()
+      await logout()
       return
     }
 
@@ -80,7 +80,7 @@ export function useAuth() {
       if (refreshToken.value) {
         await refresh()
       } else {
-        logout()
+        await logout()
       }
     }
   }
