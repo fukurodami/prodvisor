@@ -18,6 +18,7 @@
     "@primevue/nuxt-module": "^4.5.4",
     "@unocss/reset": "^66.6.0",
     "@vee-validate/zod": "^4.15.1",
+    "@vueuse/core": "^14.2.1",
     "date-fns": "^4.1.0",
     "echarts": "^6.0.0",
     "imask": "^7.6.1",

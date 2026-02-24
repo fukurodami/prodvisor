@@ -4,6 +4,7 @@ const EnvVar = {
   srv_api: 'https://api.beyondviolet.com',
   srv_sso: 'https://sso.beyondviolet.com',
   srv_static: 'https://static.beyondviolet.com',
+  srv_analytics: 'https://analytics.beyondviolet.com',
 }
 
 export default defineNuxtConfig({
@@ -14,6 +15,7 @@ export default defineNuxtConfig({
       baseURL: EnvVar.srv_api,
       baseURLSSO: EnvVar.srv_sso,
       baseURLStatic: EnvVar.srv_static,
+      baseURLAnalytics: EnvVar.srv_analytics,
     },
   },
 

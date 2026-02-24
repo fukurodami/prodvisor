@@ -18,7 +18,7 @@ import SelfPopover from '@/features/auth/ui/SelfPopover.vue'
       </template>
     </Menubar>
     <div class="layout-content">
-      <div id="header-page" class="font-700 text-2xl"></div>
+      <div id="header-page" class="font-700 text-2xl mb-8"></div>
       <slot />
     </div>
     <Toast position="top-right" />

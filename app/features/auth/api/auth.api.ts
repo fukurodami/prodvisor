@@ -13,13 +13,14 @@ export async function sendPhone(payload: SendPhonePayload): Promise<SendPhoneRes
 
   const { makeFetch } = useAppFetch()
   return makeFetch<SendPhoneResponse>(
-    `${SSO_BASE}/oauth/authorize/`,
+    `/oauth/authorize/`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: payload,
     },
-    true
+    true,
+    SSO_BASE
   )
 }
 
@@ -33,7 +34,7 @@ export async function sendCode(payload: {
 
   const { makeFetch } = useAppFetch()
   return makeFetch<LoginResponse>(
-    `${SSO_BASE}/oauth/token/`,
+    `/oauth/token/`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -43,7 +44,8 @@ export async function sendCode(payload: {
         app_secret: '251ec2c094984822be439b0b9081f02f',
       },
     },
-    true
+    true,
+    SSO_BASE
   )
 }
 
@@ -53,7 +55,7 @@ export async function refreshTokens(refreshToken: string): Promise<LoginResponse
 
   const { makeFetch } = useAppFetch()
   return makeFetch<LoginResponse>(
-    `${SSO_BASE}/oauth/token/`,
+    `/oauth/token/`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -62,7 +64,8 @@ export async function refreshTokens(refreshToken: string): Promise<LoginResponse
         refresh_token: refreshToken,
       },
     },
-    true
+    true,
+    SSO_BASE
   )
 }
 
