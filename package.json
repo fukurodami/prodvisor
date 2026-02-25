@@ -2,6 +2,10 @@
   "name": "prodvisor",
   "type": "module",
   "private": true,
+  "engines": {
+    "node": "25.2.1",
+    "pnpm": "10.29.3"
+  },
   "scripts": {
     "dev": "nuxt dev",
     "build": "nuxt build",
