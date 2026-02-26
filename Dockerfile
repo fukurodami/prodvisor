@@ -3,7 +3,7 @@ FROM node:20.17.0-alpine AS builder
 WORKDIR /app
 
 # Устанавливаем pnpm без глобальной установки (чтобы не тащить лишние файлы)
-RUN npm install -g pnpm@9.15.5
+RUN npm install -g pnpm@10.29.3
 
 # Копируем только package.json и pnpm-lock.yaml для оптимизации кеша
 COPY package.json pnpm-lock.yaml ./
@@ -19,7 +19,7 @@ RUN pnpm run build
 
 
 # Шаг 2: Финальный легковесный образ
-FROM node:20.17.0-alpine
+FROM node:25.2.1-alpine
 
 WORKDIR /app
 
