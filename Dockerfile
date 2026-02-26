@@ -51,31 +51,31 @@ FROM node:25.2.1-alpine AS builder
 
 WORKDIR /app
 
-# Устанавливаем pnpm глобально
+
 RUN npm install -g pnpm@10.29.3
 
-# Копируем lock-файл и package.json для кеша
+
 COPY package.json pnpm-lock.yaml ./
 
-# Устанавливаем ВСЕ зависимости (включая dev, чтобы nuxt был доступен)
+
 RUN pnpm install --frozen-lockfile
 
-# Копируем весь проект
+
 COPY . .
 
-# Собираем Nuxt
-RUN pnpm run build
 
-# Этап 2: Финальный образ (runtime)
+RUN yes n | pnpm run build
+
+
 FROM node:25.2.1-alpine
 
 WORKDIR /app
 
-# Копируем только то, что нужно для запуска
+
 COPY --from=builder /app/.output ./.output
 COPY --from=builder /app/package.json ./package.json
 
-# Создаём пользователя nginx (группа 984, пользователь 984)
+
 RUN addgroup -g 984 -S nginx && \
     adduser -u 984 -S nginx -G nginx
 
