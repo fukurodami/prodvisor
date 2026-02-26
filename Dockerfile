@@ -52,7 +52,7 @@ FROM node:25.2.1-alpine AS builder
 WORKDIR /app
 
 # Устанавливаем pnpm глобально
-RUN npm install -g pnpm@10.2.0
+RUN npm install -g pnpm@10.29.3
 
 # Копируем lock-файл и package.json для кеша
 COPY package.json pnpm-lock.yaml ./
