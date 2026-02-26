@@ -85,7 +85,7 @@ RUN mkdir -p /app/socket && \
     chmod 770 /app/socket
 
 # Переключаемся на пользователя nginx
-USER nginx
+
 
 # Устанавливаем переменную для unix-сокета (Nuxt/Nitro её понимает)
 ENV NITRO_UNIX_SOCKET=/app/socket/lk_prodvisor.sock
@@ -93,6 +93,6 @@ ENV NITRO_UNIX_SOCKET=/app/socket/lk_prodvisor.sock
 # Копируем entrypoint (если он у тебя есть)
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
-
+USER root
 # Запускаем через entrypoint
 ENTRYPOINT ["/entrypoint.sh"]
