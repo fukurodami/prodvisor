@@ -32,7 +32,7 @@ RUN addgroup -g 984 -S nginx && adduser -u 984 -S nginx -G nginx
 RUN mkdir -p /app/socket && chmod 777 /app/socket
 
 # Устанавливаем переменную окружения для сокета
-ENV NITRO_UNIX_SOCKET=/app/socket/prodvisor.sock
+ENV NITRO_UNIX_SOCKET=/app/socket/lk_prodvisor.sock
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
