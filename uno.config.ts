@@ -34,14 +34,15 @@ export default defineConfig({
   theme: {
     colors: {
       text: '#303033',
-      primary: '#409EFF',
+      primary: '#5F5FF6',
       success: '#67C23A',
       warning: '#E6A23C',
       danger: '#F56C6C',
       info: '#909399',
+      telegram: '#0088CC',
       indigo: {
-        50: '#eef2ff',
-        100: '#e0e7ff',
+        50: '#F2F1FF',
+        100: '#DBDBFD',
         600: '#4f46e5',
         700: '#4338ca',
       },
@@ -63,13 +64,11 @@ export default defineConfig({
       sans: ['Roboto', 'system-ui', 'sans-serif'],
     },
     fontSize: {
-      xs: '0.75rem',
-      sm: '0.875rem',
-      base: '0.875rem',
-      lg: '1.125rem',
-      xl: '1.25rem',
-      '2xl': '1.5rem',
-      '3xl': '1.875rem',
+      xs: '0.75rem', // 12px
+      sm: '0.875rem', // 14px
+      base: '1rem', // 16px
+      lg: '1.125rem', // 18px
+      xl: '1.25rem', // 20px
     },
   },
 
@@ -82,10 +81,10 @@ export default defineConfig({
         ' !focus:ring-0 !shadow-none',
     ],
     [
-      'btn-white',
-      'inline-flex items-center gap-2 bg-white' +
-        ' !border-none text-gray-900 !hover:bg-white' +
-        ' !focus:bg-white !focus:outline-none !focus:ring-0 !shadow-none',
+      'btn-outline-primary',
+      'inline-flex items-center gap-2 bg-transparent' +
+        ' border border-primary text-primary hover:bg-primary hover:!text-white' +
+        ' !focus:bg-primary !focus:outline-none !focus:ring-0 !shadow-none',
     ],
 
     ['flex-center', 'flex items-center justify-center'],

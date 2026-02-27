@@ -67,8 +67,9 @@ export function usePhoneAuth(getCaptchaToken?: () => Promise<string>, toast?: Ap
   onUnmounted(stopTimer)
 
   async function sendPhoneNumber(method: AuthMethod) {
-    if (phone.value.length !== 10) {
-      toast?.warning('Введите полный номер телефона (10 цифр после +7)')
+    console.log('Phone value:', phone.value, 'Length:', phone.value?.length)
+    if (!phone.value || phone.value.length === 0) {
+      toast?.warning('Введите номер телефона')
       return
     }
 

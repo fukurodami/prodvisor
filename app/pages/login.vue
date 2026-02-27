@@ -3,7 +3,6 @@ import PhoneInput from '@/shared/ui/PhoneInput.vue'
 import OtpInput from '@/shared/ui/OtpInput.vue'
 import VueHcaptcha from '@hcaptcha/vue3-hcaptcha'
 import { usePhoneAuth } from '@/features/auth/composables/usePhoneAuth'
-import Button from 'primevue/button'
 import type { AuthMethod } from '@/entities/user/types'
 import { useToast } from '@/shared/composables/useToast'
 
@@ -55,75 +54,108 @@ function goBack() {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center p-4">
-    <div class="w-full max-w-md bg-gray-800 rounded-2xl shadow-2xl overflow-hidden border border-gray-700">
-      <div class="p-8">
-        <h2 class="text-3xl font-bold text-white text-center mb-8">
-          {{ step === 'phone' ? 'Вход' : 'Подтверждение кода' }}
-        </h2>
+  <div class="login-wrapper">
+    <BaseButton
+      v-if="step === 'code'"
+      class="text-primary self-start mb-14 min-w-0 !px-0"
+      label="← Назад"
+      text
+      variant="white"
+      @click="goBack"
+    />
+    <div class="login-from">
+      <Icon v-if="step === 'phone'" :size="56" class="ml-auto mr-auto mb-5" name="logo" />
 
-        <Button
-          v-if="step === 'code'"
-          class="mb-6 text-gray-400 hover:text-white transition-colors w-full justify-start"
-          label="← Вернуться к номеру"
-          text
-          @click="goBack"
+      <div
+        v-else-if="step === 'code'"
+        class="mb-5 p-3 border border-indigo-100 bg-indigo-50 rounded-lg w-[56px] h-[56px] ml-auto mr-auto"
+      >
+        <Icon :size="32" class="ml-auto mr-auto text-primary" name="secure" />
+      </div>
+      <h2 class="text-[32px] font-bold text-center mb-4">
+        {{ step === 'phone' ? 'Войдите в Prodvisor' : 'Подтвердите номер' }}
+      </h2>
+
+      <div v-if="step === 'phone'" class="flex flex-col gap-[20px]">
+        <span class="text-center">Введите номер телефона для входа или регистрации в системе</span>
+
+        <PhoneInput v-model="phone" :disabled="isLoading" :error="errorMsg" />
+
+        <BaseButton
+          :loading="isLoading"
+          class="w-full !border-none !bg-telegram hover:!bg-telegram/90"
+          icon="telegram"
+          label="Получить код в Telegram "
+          variant="primary"
+          weight="bold"
+          @click="sendPhoneNumber('telegram_code')"
+        ></BaseButton>
+
+        <BaseButton
+          :loading="isLoading"
+          class="w-full !text-primary"
+          label="Выбрать другой способ"
+          weight="bold"
         />
 
-        <div v-if="step === 'phone'">
-          <PhoneInput
-            v-model="phone"
-            :disabled="isLoading"
-            :error="errorMsg"
-          />
+        <!--        <BaseButton-->
+        <!--          :loading="isLoading"-->
+        <!--          class="block w[100%]"-->
+        <!--          label="Звонок"-->
+        <!--          outlined-->
+        <!--          @click="sendPhoneNumber('phone_code')"-->
+        <!--        />-->
+      </div>
 
-          <div class="grid grid-cols-2 gap-4 mt-8">
-            <Button
-              :loading="isLoading"
-              class="p-button-raised p-button-primary"
-              label="Телеграм"
-              @click="sendPhoneNumber('telegram_code')"
-            />
+      <div v-if="step === 'code'" class="flex flex-col gap-[24px]">
+        <span class="text-center"
+          >Мы отправили код
+          {{ currentMethod === 'telegram_code' ? 'в Telegram' : 'по звонку на номер' }} бот по
+          номеру<br />
+          <strong class="font-bold">+7 {{ phone }}</strong></span
+        >
 
-            <Button
-              :loading="isLoading"
-              class="p-button-outlined p-button-secondary"
-              label="Звонок"
-              outlined
-              @click="sendPhoneNumber('phone_code')"
-            />
-          </div>
-        </div>
+        <OtpInput v-model="code" :disabled="isLoading" :height="60" @complete="verifyCode" />
 
-        <div v-if="step === 'code'">
-          <OtpInput
-            v-model="code"
-            :disabled="isLoading"
-            @complete="verifyCode"
-          />
-
-          <Button
-            :loading="isLoading"
-            class="w-full mt-6 p-button-raised p-button-primary"
-            label="Войти"
-            @click="verifyCode"
-          />
-        </div>
-
-        <vue-hcaptcha
-          ref="captchaRef"
-          sitekey="18e5142d-9054-487b-af5d-ce24cf8a09f9"
-          size="invisible"
+        <BaseButton
+          :loading="isLoading"
+          class="w-full"
+          label="Подтвердить"
+          variant="primary"
+          weight="bold"
+          @click="verifyCode"
         />
+      </div>
 
-        <div v-if="remainingTime > 0" class="mt-6 text-center text-gray-300">
-          Введите код, отправленный вам
-          <strong class="text-white">
-            {{ currentMethod === 'telegram_code' ? 'в Telegram' : 'по звонку на номер' }}
-          </strong>
-          в течение: <strong class="text-indigo-400">{{ remainingTime }} сек</strong>
-        </div>
+      <vue-hcaptcha
+        ref="captchaRef"
+        sitekey="18e5142d-9054-487b-af5d-ce24cf8a09f9"
+        size="invisible"
+      />
+
+      <div v-if="remainingTime > 0" class="mt-6 text-center text-neutal-600">
+        Отправить еще раз через
+        <span class="text-neutal-900">{{ remainingTime }} сек.</span>
       </div>
     </div>
   </div>
 </template>
+
+<style lang="scss" scoped>
+.login-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 40px;
+}
+.login-from {
+  align-self: center;
+  width: 460px;
+  margin: auto;
+  padding: 0 40px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+</style>
